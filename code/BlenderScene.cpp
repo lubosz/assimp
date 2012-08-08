@@ -343,18 +343,32 @@ template <> void Structure :: Convert<Mesh> (
 
     ReadField<ErrorPolicy_Fail>(dest.id,"id",db);
     ReadFieldPtr<ErrorPolicy_Fail>(dest.mat,"**mat",db);
-    ReadFieldPtr<ErrorPolicy_Fail>(dest.mface,"*mface",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.mtpoly,"*mtpoly",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.mloop,"*mloop",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.mloopuv,"*mloopuv",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.mloopcol,"*mloopcol",db);
+    ReadFieldPtr<ErrorPolicy_Warn>(dest.mface,"*mface",db);
     ReadFieldPtr<ErrorPolicy_Igno>(dest.mtface,"*mtface",db);
     ReadFieldPtr<ErrorPolicy_Igno>(dest.tface,"*tface",db);
     ReadFieldPtr<ErrorPolicy_Fail>(dest.mvert,"*mvert",db);
     ReadFieldPtr<ErrorPolicy_Warn>(dest.medge,"*medge",db);
     ReadFieldPtr<ErrorPolicy_Igno>(dest.dvert,"*dvert",db);
     ReadFieldPtr<ErrorPolicy_Igno>(dest.mcol,"*mcol",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.msticky,"*msticky",db);
+    ReadFieldPtr<ErrorPolicy_Igno>(dest.texcomesh,"*texcomesh",db);
     ReadField<ErrorPolicy_Fail>(dest.totvert,"totvert",db);
     ReadField<ErrorPolicy_Fail>(dest.totedge,"totedge",db);
-    ReadField<ErrorPolicy_Fail>(dest.totface,"totface",db);
+    ReadField<ErrorPolicy_Warn>(dest.totface,"totface",db);
+    ReadField<ErrorPolicy_Igno>(dest.totloop,"totloop",db);
+    ReadFieldArray<ErrorPolicy_Igno>(dest.loc,"loc",db);
+    ReadFieldArray<ErrorPolicy_Igno>(dest.size,"size",db);
+    ReadFieldArray<ErrorPolicy_Igno>(dest.rot,"rot",db);
+    ReadField<ErrorPolicy_Igno>(dest.texflag,"texflag",db);
+    ReadField<ErrorPolicy_Igno>(dest.drawflag,"drawflag",db);
     ReadField<ErrorPolicy_Igno>(dest.smoothresh,"smoothresh",db);
+    ReadField<ErrorPolicy_Igno>(dest.flag,"flag",db);
     ReadField<ErrorPolicy_Igno>(dest.subdiv,"subdiv",db);
+    ReadField<ErrorPolicy_Igno>(dest.totcol,"totcol",db);
 
 	db.reader->IncPtr(size);
 }
