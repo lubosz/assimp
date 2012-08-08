@@ -623,8 +623,37 @@ void BlenderImporter::ConvertMesh(const Scene& /*in*/, const Object* /*obj*/, co
 	ConversionData& conv_data, TempArray<std::vector,aiMesh>&  temp
 	) 
 {
+    printf("mpoly %d\n", mesh->mpoly.size());
+    printf("mtpoly %d\n", mesh->mtpoly.size());
+    printf("mloop %d\n", mesh->mloop.size());
+    printf("mloopuv %d\n", mesh->mloopuv.size());
+    printf("mloopcol %d\n", mesh->mloopcol.size());
+
+    printf("mat %d\n", mesh->mat.size());
+
+
+    printf("mface %d\n", mesh->mface.size());
+    printf("mtface %d\n", mesh->mtface.size());
+    printf("tface %d\n", mesh->tface.size());
+    printf("mvert %d\n", mesh->mvert.size());
+    printf("medge %d\n", mesh->medge.size());
+    printf("dvert %d\n", mesh->dvert.size());
+
+    printf("mcol %d\n", mesh->mcol.size());
+    printf("msticky %d\n", mesh->msticky.size());
+    printf("texcomesh %d\n", mesh->texcomesh.size());
+
+    printf("totface %d\n", mesh->totface);
+    printf("totvert %d\n", mesh->totvert);
+
+    printf("totselect %d\n", mesh->totselect);
+    printf("totpoly %d\n", mesh->totpoly);
+    printf("totloop %d\n", mesh->totloop);
+
 	typedef std::pair<const int,size_t> MyPair;
-	if (!mesh->totface || !mesh->totvert) {
+//	if (!mesh->totface || !mesh->totvert) {
+    if (!mesh->totvert) {
+        printf("No totface and no totvert!\n");
 		return;
 	}
 
@@ -649,8 +678,12 @@ void BlenderImporter::ConvertMesh(const Scene& /*in*/, const Object* /*obj*/, co
 	const size_t old = temp->size();
 	temp->reserve(temp->size() + per_mat.size());
 
+    printf("The fun begins\n");
+
 	std::map<size_t,size_t> mat_num_to_mesh_idx;
 	for_each(MyPair& it, per_mat) {
+
+        printf("Making some mesh or something\n");
 
 		mat_num_to_mesh_idx[it.first] = temp->size();
 		temp->push_back(new aiMesh());
@@ -666,6 +699,7 @@ void BlenderImporter::ConvertMesh(const Scene& /*in*/, const Object* /*obj*/, co
 		// all submeshes created from this mesh are named equally. this allows
 		// curious users to recover the original adjacency.
 		out->mName = aiString(mesh->id.name+2);  
+        printf("name: %s\n", out->mName.data);
 			// skip over the name prefix 'ME'
 
 		// resolve the material reference and add this material to the set of
@@ -884,6 +918,13 @@ aiLight* BlenderImporter::ConvertLight(const Scene& /*in*/, const Object* /*obj*
 // ------------------------------------------------------------------------------------------------
 aiNode* BlenderImporter::ConvertNode(const Scene& in, const Object* obj, ConversionData& conv_data, const aiMatrix4x4& parentTransform)
 {
+
+    if (obj->data) {
+        printf("Object has data!\n");
+    } else {
+        printf("Object has no data!\n");
+    }
+
 	std::deque<const Object*> children;
 	for(std::set<const Object*>::iterator it = conv_data.objects.begin(); it != conv_data.objects.end() ;) {
 		const Object* object = *it;
@@ -901,12 +942,14 @@ aiNode* BlenderImporter::ConvertNode(const Scene& in, const Object* obj, Convers
 		switch (obj->type)
 		{
 		case Object :: Type_EMPTY:
+            printf("Empty\n");
 			break; // do nothing
 
 
 			// supported object types
 		case Object :: Type_MESH: {
-			const size_t old = conv_data.meshes->size();
+            const size_t old = conv_data.meshes->size();
+            printf("Mesh oldsize%d\n", old);
 
 			CheckActualType(obj->data.get(),"Mesh");
 			ConvertMesh(in,obj,static_cast<const Mesh*>(obj->data.get()),conv_data,conv_data.meshes);
@@ -919,7 +962,8 @@ aiNode* BlenderImporter::ConvertNode(const Scene& in, const Object* obj, Convers
 			}}
 			break;
 		case Object :: Type_LAMP: {
-			CheckActualType(obj->data.get(),"Lamp");
+            printf("lamp\n");
+            CheckActualType(obj->data.get(),"Lamp");
 			aiLight* mesh = ConvertLight(in,obj,static_cast<const Lamp*>(
 				obj->data.get()),conv_data);
 
@@ -928,6 +972,7 @@ aiNode* BlenderImporter::ConvertNode(const Scene& in, const Object* obj, Convers
 			}}
 			break;
 		case Object :: Type_CAMERA: {
+            printf("cam\n");
 			CheckActualType(obj->data.get(),"Camera");
 			aiCamera* mesh = ConvertCamera(in,obj,static_cast<const Camera*>(
 				obj->data.get()),conv_data);
@@ -960,6 +1005,7 @@ aiNode* BlenderImporter::ConvertNode(const Scene& in, const Object* obj, Convers
 
 			// invalid or unknown type
 		default:
+            printf("Unknown type\n");
 			break;
 		}
 	}
