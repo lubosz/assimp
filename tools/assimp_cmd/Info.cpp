@@ -112,12 +112,14 @@ unsigned int CountAnimChannels(const aiScene* scene)
 
 // -----------------------------------------------------------------------------------
 unsigned int GetAvgFacePerMesh(const aiScene* scene) {
-	return static_cast<unsigned int>(CountFaces(scene)/scene->mNumMeshes);
+	if (scene->mNumMeshes != 0)
+		return static_cast<unsigned int>(CountFaces(scene)/scene->mNumMeshes);
 }
 
 // -----------------------------------------------------------------------------------
 unsigned int GetAvgVertsPerMesh(const aiScene* scene) {
-	return static_cast<unsigned int>(CountVertices(scene)/scene->mNumMeshes);
+	if (scene->mNumMeshes != 0)
+		return static_cast<unsigned int>(CountVertices(scene)/scene->mNumMeshes);
 }
 
 // -----------------------------------------------------------------------------------
@@ -234,6 +236,8 @@ int Assimp_Info (const char* const* params, unsigned int num)
 		: aiProcessPreset_TargetRealtime_MaxQuality;
 
 	// import the main model
+    import.log = true;
+    import.showLog = true;
 	const aiScene* scene = ImportModel(import,in);
 	if (!scene) {
 		printf("assimp info: Unable to load input file %s\n",
