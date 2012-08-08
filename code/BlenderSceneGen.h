@@ -120,6 +120,18 @@ template <> void Structure :: Convert<Material> (
     ) const
 ;
 
+template <> void Structure :: Convert<MTexPoly> (
+    MTexPoly& dest,
+    const FileDatabase& db
+    ) const
+;
+
+template <> void Structure :: Convert<MSticky> (
+    MSticky& dest,
+    const FileDatabase& db
+    ) const
+;
+
 template <> void Structure :: Convert<Mesh> (
     Mesh& dest,
     const FileDatabase& db
@@ -138,6 +150,12 @@ template <> void Structure :: Convert<World> (
     ) const
 ;
 
+template <> void Structure :: Convert<MLoopCol> (
+    MLoopCol& dest,
+    const FileDatabase& db
+    ) const
+;
+
 template <> void Structure :: Convert<MVert> (
     MVert& dest,
     const FileDatabase& db
@@ -150,6 +168,12 @@ template <> void Structure :: Convert<MEdge> (
     ) const
 ;
 
+template <> void Structure :: Convert<MLoopUV> (
+    MLoopUV& dest,
+    const FileDatabase& db
+    ) const
+;
+
 template <> void Structure :: Convert<GroupObject> (
     GroupObject& dest,
     const FileDatabase& db
@@ -158,6 +182,12 @@ template <> void Structure :: Convert<GroupObject> (
 
 template <> void Structure :: Convert<ListBase> (
     ListBase& dest,
+    const FileDatabase& db
+    ) const
+;
+
+template <> void Structure :: Convert<MLoop> (
+    MLoop& dest,
     const FileDatabase& db
     ) const
 ;
@@ -180,8 +210,8 @@ template <> void Structure :: Convert<MCol> (
     ) const
 ;
 
-template <> void Structure :: Convert<Image> (
-    Image& dest,
+template <> void Structure :: Convert<MPoly> (
+    MPoly& dest,
     const FileDatabase& db
     ) const
 ;
@@ -212,6 +242,12 @@ template <> void Structure :: Convert<Camera> (
 
 template <> void Structure :: Convert<MirrorModifierData> (
     MirrorModifierData& dest,
+    const FileDatabase& db
+    ) const
+;
+
+template <> void Structure :: Convert<Image> (
+    Image& dest,
     const FileDatabase& db
     ) const
 ;
