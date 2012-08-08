@@ -145,7 +145,6 @@ struct MVert : ElemBase {
     float co[3] FAIL;
     float no[3] FAIL;
     char flag;
-    int mat_nr WARN;
     int bweight;
 };
 
@@ -165,7 +164,7 @@ struct MCol : ElemBase {
 struct MFace : ElemBase {
     int v1,v2,v3,v4 FAIL;
     int mat_nr FAIL;
-    char flag;
+    char edcode, flag;
 };
 
 // -------------------------------------------------------------------------------
@@ -228,28 +227,111 @@ struct Material : ElemBase {
     boost::shared_ptr<MTex> mtex[18];
 };
 
+// BMESH Stuff
+struct MPoly : ElemBase {
+    int loopstart;
+    int totloop;
+    short mat_nr;
+    char flag, pad;
+};
+
+
+struct MLoop : ElemBase {
+    int v;
+    int e;
+};
+
+struct MTexPoly : ElemBase {
+    //    vector<Image> tpage;
+    // boost::shared_ptr<Image> tpage;
+    char flag, transp;
+    short mode, tile, pad;
+};
+
+struct MLoopUV : ElemBase {
+    float uv[2];
+    int flag;
+};
+
+struct MLoopCol : ElemBase {
+    char r, g, b, a;
+};
+
+
+//---------
+struct MSticky : ElemBase {
+    float co[2];
+};
+
+
 // -------------------------------------------------------------------------------
 struct Mesh : ElemBase {
     ID id FAIL;
 
-    int totface FAIL;
-    int totedge FAIL;
-    int totvert FAIL;
+    // animation data (must be immediately after id for utilities to use it)
+    //struct AnimData *adt;
+    //struct BoundBox *bb;
 
-    short subdiv;
-    short subdivr;
-    short subsurftype;
-    short smoothresh;
+    //struct Ipo *ipo  DNA_DEPRECATED;
+    //struct Key *key;
+    vector< boost::shared_ptr<Material> > mat FAIL;
+    //struct MSelect *mselect;
 
-    vector<MFace> mface FAIL;
+    // BMESH STUFF
+    vector<MPoly> mpoly;
+    vector<MTexPoly> mtpoly;
+    vector<MLoop> mloop;
+    vector<MLoopUV> mloopuv;
+    vector<MLoopCol> mloopcol;
+
+    vector<MFace> mface WARN;
     vector<MTFace> mtface;
     vector<TFace> tface;
     vector<MVert> mvert FAIL;
     vector<MEdge> medge WARN;
     vector<MDeformVert> dvert;
-    vector<MCol> mcol;
 
-    vector< boost::shared_ptr<Material> > mat FAIL;
+    vector<MCol> mcol;
+    vector<MSticky> msticky;
+    vector<Mesh> texcomesh;
+
+    //    CustomData vdata, edata, fdata;
+
+    // BMESH ONLY
+    //        CustomData pdata, ldata;
+    // END BMESH ONLY
+
+    //Bug if placed below
+    int totselect;
+
+    int totvert FAIL;
+    int totedge FAIL;
+    int totface WARN;
+
+    // BMESH ONLY
+    int totpoly;
+    int totloop;
+    // END BMESH ONLY
+
+    int act_face;
+
+    float loc[3];
+    float size[3];
+    float rot[3];
+
+    short texflag;
+    short drawflag;
+    short smoothresh;
+    short flag;
+
+    short subdiv; //DEPRECATED
+    short subdivr; //DEPRECATED
+    short subsurftype; //DEPRECATED
+
+    char editflag;
+    short totcol;
+
+    //struct Multires *mr DNA_DEPRECATED;
 };
 
 // -------------------------------------------------------------------------------
@@ -273,7 +355,7 @@ struct Camera : ElemBase {
     // struct AnimData *adt;
 
     Type type,flag WARN;
-    float angle WARN;
+    //float angle WARN;
     //float passepartalpha, angle;
     //float clipsta, clipend;
     //float lens, ortho_scale, drawsize;
